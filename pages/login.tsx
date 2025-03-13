@@ -36,10 +36,10 @@ const Login = () => {
 
     if (result.error) {
       toast({
-        title: 'Authentication Error',
+        title: 'Error',
         description: result.error,
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
     } else {
@@ -58,11 +58,11 @@ const Login = () => {
         bg="white"
       >
         <VStack spacing={4} align="flex-start" w="full">
-          <Heading>POS System Login</Heading>
+          <Heading>Login</Heading>
           <Text>Please sign in to continue</Text>
 
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-            <VStack spacing={4} align="flex-start" w="full">
+            <VStack spacing={4}>
               <FormControl isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input
@@ -83,7 +83,7 @@ const Login = () => {
 
               <Button
                 type="submit"
-                colorScheme="brand"
+                colorScheme="blue"
                 width="full"
                 isLoading={isLoading}
               >
@@ -91,8 +91,6 @@ const Login = () => {
               </Button>
             </VStack>
           </form>
-          
-          <Text fontSize="sm">Default credentials: admin / admin123</Text>
         </VStack>
       </Box>
     </Center>
