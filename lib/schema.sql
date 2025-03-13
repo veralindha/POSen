@@ -51,9 +51,12 @@ CREATE TABLE IF NOT EXISTS transaction_items (
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
--- Insert default admin user (password: admin123)
-INSERT INTO users (username, password, full_name, role) 
-VALUES ('admin', '$2a$10$mLK.rrdlvx9DCFb6Eck1t.TlltnGulepXnov3bBp5T2TloO1MYj52', 'Admin User', 'admin');
+-- Insert dummy users (passwords are hashed versions of their usernames)
+INSERT INTO users (username, password, full_name, role) VALUES 
+('admin', '$2a$10$mLK.rrdlvx9DCFb6Eck1t.TlltnGulepXnov3bBp5T2TloO1MYj52', 'Admin User', 'admin'),
+('john', '$2a$10$MqfPkN1NBtSlHWj3pM3.0uJx8oQEr3.UQO7yurx8jkGaNHo5A0Dei', 'John Smith', 'admin'),
+('sarah', '$2a$10$F2O/bGnH8Xp0U8p6F5e8/.ZEgwWf6svZSzb4PXcQFBGrOIqV0E9Gy', 'Sarah Johnson', 'cashier'),
+('mike', '$2a$10$YL13UqP7pLw8CUhGdFY3KOD9H5wCnwVNXq1DqrHzhHSJHVyHZVOdW', 'Mike Brown', 'cashier');
 
 -- Insert some sample categories
 INSERT INTO categories (name) VALUES 
