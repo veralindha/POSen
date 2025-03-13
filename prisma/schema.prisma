@@ -1,0 +1,90 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  fullName  String   @map("full_name")
+  role      Role     @default(CASHIER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?   @db.Text
+  price       Decimal   @db.Decimal(10, 2)
+  stock       Int       @default(0)
+  imageUrl    String?   @map("image_url")
+  categoryId  Int?      @map("category_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  category    Category? @relation(fields: [categoryId], references: [id])
+  transactionItems TransactionItem[]
+
+  @@map("products")
+}
+
+model Transaction {
+  id             Int               @id @default(autoincrement())
+  userId         Int              @map("user_id")
+  totalAmount    Decimal          @map("total_amount") @db.Decimal(10, 2)
+  paymentMethod  PaymentMethod    @map("payment_method")
+  status         TransactionStatus @default(COMPLETED)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  user           User             @relation(fields: [userId], references: [id])
+  items          TransactionItem[]
+
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id            Int         @id @default(autoincrement())
+  transactionId Int         @map("transaction_id")
+  productId     Int         @map("product_id")
+  quantity      Int
+  priceAtTime   Decimal     @map("price_at_time") @db.Decimal(10, 2)
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  product       Product     @relation(fields: [productId], references: [id])
+
+  @@map("transaction_items")
+}
+
+enum Role {
+  ADMIN
+  CASHIER
+  MANAGER
+}
+
+enum PaymentMethod {
+  CASH    @map("cash")
+  CARD    @map("card")
+  OTHER   @map("other")
+}
+
+enum TransactionStatus {
+  COMPLETED @map("completed")
+  CANCELED  @map("canceled")
+  REFUNDED  @map("refunded")
+}
